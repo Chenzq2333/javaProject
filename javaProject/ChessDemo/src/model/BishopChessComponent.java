@@ -106,3 +106,5 @@ public class BishopChessComponent extends ChessComponent{
 //        }
 //    }
 }
+
+//修改成功了吗
