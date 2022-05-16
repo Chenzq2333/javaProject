@@ -56,6 +56,26 @@ public class KnightChessComponent extends ChessComponent{
         initiateRookImage(color);
     }
 
+    @Override
+    public boolean canMoveTo(ChessComponent[][] chessboard, ChessboardPoint destination) {
+        //原位置
+        ChessboardPoint source = getChessboardPoint();
+        int x1=source.getX();
+        int y1=source.getY();
+        //新地址
+        int x2=destination.getX();
+        int y2=destination.getY();
+
+        // 原地址和新地址横坐标和纵坐标的距离平方是 5
+        if(Math.pow((x1-x2),2)+Math.pow((y1-y2),2)==5){
+            System.out.println("可以移动");
+            return true;
+        }else {
+            System.out.println("不能动");
+            return false;
+        }
+    }
+
     /**
      * 马棋子的移动规则
      *
@@ -94,15 +114,15 @@ public class KnightChessComponent extends ChessComponent{
      *
      * @param g 可以类比于画笔
      */
-//    @Override
-//    protected void paintComponent(Graphics g) {
-//        super.paintComponent(g);
-////        g.drawImage(rookImage, 0, 0, getWidth() - 13, getHeight() - 20, this);
-//        g.drawImage(rookImage, 0, 0, getWidth() , getHeight(), this);
-//        g.setColor(Color.BLACK);
-//        if (isSelected()) { // Highlights the model if selected.
-//            g.setColor(Color.RED);
-//            g.drawOval(0, 0, getWidth() , getHeight());
-//        }
-//    }
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+//        g.drawImage(rookImage, 0, 0, getWidth() - 13, getHeight() - 20, this);
+        g.drawImage(knightImage, 0, 0, getWidth() , getHeight(), this);
+        g.setColor(Color.BLACK);
+        if (isSelected()) { // Highlights the model if selected.
+            g.setColor(Color.RED);
+            g.drawOval(0, 0, getWidth() , getHeight());
+        }
+    }
 }
