@@ -1,6 +1,7 @@
 package view;
 
 
+import controller.GameController;
 import model.*;
 import controller.ClickController;
 
@@ -37,9 +38,14 @@ public class Chessboard extends JComponent {
         setSize(width, height);
         CHESS_SIZE = width / 8;
         System.out.printf("chessboard size = %d, chess size = %d\n", width, CHESS_SIZE);
+        //加载棋盘上的棋子
+        initChessBoard();
+        //
+        GameController.chessBoardStatus.put("0",getNewChessComponents());
+    }
 
+    public void initChessBoard() {
         initiateEmptyChessboard();
-
         // FIXME: Initialize chessboard for testing only.
         for (int i = 0; i < 8; i++) {
             initPawnOnBoard(1,i,ChessColor.BLACK);
@@ -66,8 +72,9 @@ public class Chessboard extends JComponent {
 
         initQueenOnBoard(0,4,ChessColor.BLACK);
         initQueenOnBoard(CHESSBOARD_SIZE - 1,CHESSBOARD_SIZE - 5,ChessColor.WHITE);
-    }
 
+
+    }
     public ChessComponent[][] getChessComponents() {
         return chessComponents;
     }
@@ -156,12 +163,85 @@ public class Chessboard extends JComponent {
         ((Graphics2D) g).setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
 
-
     private Point calculatePoint(int row, int col) {
         return new Point(col * CHESS_SIZE, row * CHESS_SIZE);
     }
 
     public void loadGame(List<String> chessData) {
         chessData.forEach(System.out::println);
+    }
+
+    public ChessComponent[][] getNewChessComponents() {
+        ChessComponent[][] newchessComponents=new ChessComponent[8][8];
+        for (int i=0;i<8;i++){
+            for(int j=0;j<8;j++){
+                newchessComponents[i][j]=chessComponents[i][j];
+            }
+        }
+        return newchessComponents;
+    }
+    // 重开
+    public void restart() {
+        // 先把所有的删掉，再把其他的加上去
+        for (int i=0;i<8;i++){
+            for(int j=0;j<8;j++){
+                if (chessComponents[i][j] != null) {
+                    remove(chessComponents[i][j]);
+                }
+            }
+        }
+        initChessBoard();
+        for (int i=0;i<8;i++){
+            for(int j=0;j<8;j++){
+                if (chessComponents[i][j] != null) {
+                    chessComponents[i][j].repaint();
+                }
+            }
+        }
+    }
+
+    // 悔棋
+    public void repentance() {
+        ChessComponent[][] repentanceChessBoard=GameController.chessBoardStatus.get(String.format("%d",GameController.step-1));
+        initiateEmptyChessboard();
+        for (int i=0;i<8;i++){
+            for(int j=0;j<8;j++){
+                repentanceChessBoard[i][j].swapLocation(chessComponents[i][j]);
+                if (chessComponents[i][j] != null) {
+                    remove(chessComponents[i][j]);
+                }
+                add(chessComponents[i][j]=repentanceChessBoard[i][j]);
+//                chessComponents[i][j].repaint();
+            }
+
+        }
+        for (int i=0;i<8;i++){
+            for(int j=0;j<8;j++){
+                if(chessComponents[i][j] instanceof PawnChessComponent){
+                    System.out.print("兵");
+                }
+                if(chessComponents[i][j] instanceof BishopChessComponent){
+                    System.out.print("象");
+                }
+                if(chessComponents[i][j] instanceof EmptySlotComponent){
+                    System.out.print("空");
+                }
+                if(chessComponents[i][j] instanceof KingChessComponent){
+                    System.out.print("王");
+                }
+                if(chessComponents[i][j] instanceof QueenChessComponent){
+                    System.out.print("后");
+                }
+                if(chessComponents[i][j] instanceof RookChessComponent){
+                    System.out.print("车");
+                }
+                if(chessComponents[i][j] instanceof KnightChessComponent){
+                    System.out.print("马");
+                }
+            }
+            System.out.println();
+        }
+        GameController.chessBoardStatus.remove(String.format("%d",GameController.step));
+        GameController.step-=1;
     }
 }
