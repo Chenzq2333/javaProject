@@ -31,6 +31,8 @@ public class ChessGameFrame extends JFrame {
         addLabel();
         addHelloButton();
         addLoadButton();
+        addRestartButton();
+        addRepentanceButton();
     }
 
 
@@ -81,5 +83,39 @@ public class ChessGameFrame extends JFrame {
             gameController.loadGameFromFile(path);
         });
     }
+    // 重启按钮
+    private void addRestartButton() {
+        JButton button = new JButton("Restart");
+        button.setLocation(HEIGTH,HEIGTH/10+360);
+        button.setSize(200, 60);
+        button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        add(button);
+        button.addActionListener(e -> {
+            System.out.println("Click Restart");
+//            gameController.loadGameFromFile(path);
+            gameController.restart();
+        });
+    }
+
+
+    // 悔棋按钮
+    private void addRepentanceButton() {
+        JButton button = new JButton("Repentance");
+        button.setLocation(HEIGTH,HEIGTH/10+480);
+        button.setSize(200, 60);
+        button.setFont(new Font("Rockwell", Font.BOLD, 20));
+        add(button);
+        button.addActionListener(e -> {
+            System.out.println("Click Repentance");
+//            gameController.loadGameFromFile(path);
+            if(GameController.step>=1){
+                gameController.repentance();
+            }else{
+                JOptionPane.showMessageDialog(this, "can't repentance");
+            }
+
+        });
+    }
+
 
 }
